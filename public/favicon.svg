@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <circle cx="50" cy="50" r="48" fill="#FFF7F2" stroke="#831726" stroke-width="3"/>
+  <circle cx="50" cy="50" r="42" fill="none" stroke="#EDB023" stroke-width="1.5" stroke-dasharray="3 3"/>
+  <!-- Leaf -->
+  <path d="M50 20 C60 25, 65 40, 50 55 C35 40, 40 25, 50 20 Z" fill="#2E7D32"/>
+  <path d="M50 22 C56 30, 56 42, 50 53" stroke="#FFF" stroke-width="1.2" stroke-linecap="round"/>
+  <!-- Spoon motif / flame -->
+  <path d="M38 52 C38 42, 58 35, 62 48 C66 60, 46 64, 38 52 Z" fill="#831726"/>
+  <path d="M40 50 Q 52 75 68 80" stroke="#EDB023" stroke-width="3.5" stroke-linecap="round"/>
+  <circle cx="50" cy="85" r="3" fill="#831726"/>
+</svg>

@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    background-color: #FFF9F5;
+    color: #2D1A1E;
+    overflow-x: hidden;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 9px;
+}
+::-webkit-scrollbar-track {
+  background: #FFF0E6;
+}
+::-webkit-scrollbar-thumb {
+  background: #831726;
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #6F1724;
+}
+
+/* Kolam / Rangoli Motif Subtle Background Pattern */
+.bg-kolam-pattern {
+  background-image: radial-gradient(#F1733E15 1px, transparent 1px), radial-gradient(#83172610 1px, #FFF9F5 1px);
+  background-size: 32px 32px;
+  background-position: 0 0, 16px 16px;
+}
+
+.bg-peach-silk {
+  background: linear-gradient(135deg, #FFF9F5 0%, #FFEFE6 50%, #FEDCC8 100%);
+}
+
+/* ============================================================
+   PRINT STYLESHEET: STRICT 1-PAGE OFFICIAL QUOTATION ONLY
+   ============================================================ */
+@media print {
+  html, body {
+    height: auto !important;
+    overflow: visible !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Hide absolutely everything on the website */
+  body * {
+    visibility: hidden !important;
+  }
+
+  /* Make ONLY the printable quotation letterhead visible */
+  #printable-quotation,
+  #printable-quotation * {
+    visibility: visible !important;
+  }
+
+  #printable-quotation {
+    display: block !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 10mm !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  @page {
+    size: A4 portrait;
+    margin: 0mm;
+  }
+}
