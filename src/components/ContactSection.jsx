@@ -73,10 +73,13 @@ export default function ContactSection({ lang }) {
                 </div>
                 <div>
                   <span className="text-[10px] uppercase font-bold tracking-widest text-peach-200">
-                    Master Chef & Manager
+                    Leadership & Event Management
                   </span>
-                  <h3 className="font-serif text-xl font-bold">{BRAND_INFO.proprietor}</h3>
-                  <p className="text-xs font-tamil text-peach-200">{BRAND_INFO.proprietorTamil}</p>
+                  <h3 className="font-serif text-lg sm:text-xl font-bold">
+                    Founder: {BRAND_INFO.founder}<br />
+                    <span className="text-gold-300 font-medium text-base">Co-Founder: {BRAND_INFO.coFounder}</span>
+                  </h3>
+                  <p className="text-xs font-tamil text-peach-200 mt-1">{BRAND_INFO.leadershipTamil}</p>
                 </div>
               </div>
 
@@ -177,7 +180,7 @@ export default function ContactSection({ lang }) {
                 </div>
                 <h3 className="font-serif text-2xl font-bold text-stone-900">Inquiry Received!</h3>
                 <p className="text-xs sm:text-sm text-stone-600 max-w-md mx-auto">
-                  Thank you! WhatsApp has been opened with your event details. Chef V. Manivannan will contact you shortly to finalize your custom menu.
+                  Thank you! WhatsApp has been opened with your event details. Founder V. Manivannan & Co-Founder Deepa will contact you shortly to finalize your custom menu.
                 </p>
                 <button
                   onClick={() => setIsSubmitted(false)}

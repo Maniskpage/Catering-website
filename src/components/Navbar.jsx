@@ -25,7 +25,8 @@ export default function Navbar({ lang, setLang }) {
 
   const navLinks = [
     { id: 'home', name: lang === 'ta' ? 'முகப்பு' : 'Home', path: '/' },
-    { id: 'menus', name: lang === 'ta' ? 'மெனு & கட்டணம்' : 'Menus', path: '/menus' },
+    { id: 'menus', name: lang === 'ta' ? 'மெனுக்கள்' : 'Menus', path: '/menus' },
+    { id: 'custom-menu', name: lang === 'ta' ? 'தனிப்பயன் மெனு' : 'Custom Menu', path: '/custom-menu', isSpecial: true },
     { id: 'estimator', name: lang === 'ta' ? 'விலை கணக்கீடு' : 'Estimator', path: '/estimator' },
     { id: 'stalls', name: lang === 'ta' ? 'லைவ் ஸ்டால்கள்' : 'Live Stalls', path: '/live-stalls' },
     { id: 'halls', name: lang === 'ta' ? 'மண்டபங்கள்' : 'Partner Halls', path: '/halls' },
@@ -56,9 +57,9 @@ export default function Navbar({ lang, setLang }) {
 
           {/* Right: Master Chef, Direct Phone & Language Toggle */}
           <div className="flex items-center gap-4 text-stone-200">
-            <span className="hidden lg:flex items-center gap-1 text-gold-300 font-medium">
+            <span className="hidden lg:flex items-center gap-1.5 text-gold-300 font-medium">
               <Award className="w-3.5 h-3.5 text-gold-400" />
-              <span>Chef: {BRAND_INFO.proprietor}</span>
+              <span>Founder: {BRAND_INFO.founder} • Co-Founder: {BRAND_INFO.coFounder}</span>
             </span>
 
             <a
@@ -171,7 +172,7 @@ export default function Navbar({ lang, setLang }) {
         <div className="lg:hidden bg-white border-b border-stone-200 px-4 pt-3 pb-6 space-y-3 shadow-2xl animate-fadeIn">
           <div className="p-3 bg-crimson-50 rounded-2xl border border-crimson-200 text-xs text-crimson-900 flex items-center justify-between">
             <span className="font-bold">🌿 100% Pure Veg • Min 100 Guests</span>
-            <span className="font-tamil font-bold">{BRAND_INFO.proprietorTamil}</span>
+            <span className="font-tamil font-bold">{BRAND_INFO.leadershipTamil}</span>
           </div>
 
           <div className="grid grid-cols-2 gap-2">

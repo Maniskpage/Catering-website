@@ -19,13 +19,13 @@ export default function Footer({ lang }) {
             </Link>
 
             <p className="text-xs sm:text-sm text-stone-300 leading-relaxed max-w-sm">
-              Authentic South Indian vegetarian catering by <strong className="text-white">V. Manivannan</strong>. Serving traditional Kalyana feasts, Seemantham variety meals, evening high tea & live counters across Trichy and Tamil Nadu.
+              Authentic South Indian vegetarian catering founded by <strong className="text-white">V. Manivannan</strong> & Co-Founder <strong className="text-white">Deepa</strong>. Serving traditional Kalyana feasts, Seemantham variety meals, evening high tea & live counters across Trichy and Tamil Nadu.
             </p>
 
             <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 text-xs space-y-1">
               <div className="text-gold-300 font-bold flex items-center gap-1.5">
                 <Award className="w-3.5 h-3.5" />
-                <span>{BRAND_INFO.proprietorTamil}</span>
+                <span>{BRAND_INFO.leadershipTamil}</span>
               </div>
               <p className="text-stone-300">தலைமை: சஞ்சீவிராய, பெருமாள் திருவருள்</p>
               <p className="text-stone-400 text-[11px]">மினிமம் - 100 நபர் முதல்</p>

@@ -17,7 +17,7 @@ export default function HomePage({ lang, onSelectPackage }) {
     <>
       <SEOHead
         title="Harinee Catering | Best Pure Veg Catering Service in Trichy - Feel The Taste"
-        description="Harinee Catering by Chef V. Manivannan. Providing authentic South Indian pure vegetarian catering for Weddings, Receptions, Valaikappu, and Events in Trichy, Tamil Nadu. Min 100 guests."
+        description="Harinee Catering by Founder V. Manivannan & Co-Founder Deepa. Providing authentic South Indian pure vegetarian catering for Weddings, Receptions, Valaikappu, and Events in Trichy, Tamil Nadu. Min 100 guests."
         keywords="catering service trichy, pure veg catering trichy, harinee catering, wedding catering trichy, valaikappu catering trichy, best caterers in trichy, ravi mini hall catering, kalyana saapadu trichy"
       />
 

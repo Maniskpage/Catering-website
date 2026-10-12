@@ -29,7 +29,7 @@ export default function MenusPage({ lang, onSelectPackage }) {
           <p className="text-stone-300 text-xs sm:text-base max-w-2xl mx-auto leading-relaxed">
             {lang === 'ta'
               ? 'காலை டிபன், மதிய அறுசுவை கல்யாண சாப்பாடு, மாலை ஸ்நாக்ஸ் காம்போ, இரவு பஃபே மற்றும் சீமந்தம் வளைகாப்பு மெனுக்கள்.'
-              : 'Every single package curated by Master Chef V. Manivannan using cold-pressed oils, pure cow ghee, and natural spices. Minimum 100 guests.'}
+              : 'Every single package curated by Founder V. Manivannan & Co-Founder Deepa using cold-pressed oils, pure cow ghee, and natural spices. Minimum 100 guests.'}
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">

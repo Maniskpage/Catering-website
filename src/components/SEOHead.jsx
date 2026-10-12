@@ -69,10 +69,18 @@ export default function SEOHead({ title, description, keywords, canonicalPath = 
       "telephone": "+919698297590",
       "priceRange": "₹₹ (₹180 - ₹800 per plate)",
       "servesCuisine": "South Indian Pure Vegetarian, Tamil Traditional Feast",
-      "founder": {
-        "@type": "Person",
-        "name": "V. Manivannan"
-      },
+      "founder": [
+        {
+          "@type": "Person",
+          "name": "V. Manivannan",
+          "jobTitle": "Founder"
+        },
+        {
+          "@type": "Person",
+          "name": "Deepa",
+          "jobTitle": "Co-Founder"
+        }
+      ],
       "address": [
         {
           "@type": "PostalAddress",

@@ -13,6 +13,7 @@ import LiveStallsPage from './pages/LiveStallsPage';
 import HallsPage from './pages/HallsPage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
+import CustomMenuPage from './pages/CustomMenuPage';
 
 function MainApp() {
   const [lang, setLang] = useState('en'); // 'en' or 'ta'
@@ -36,6 +37,7 @@ function MainApp() {
         <Routes>
           <Route path="/" element={<HomePage lang={lang} onSelectPackage={handleSelectPackage} />} />
           <Route path="/menus" element={<MenusPage lang={lang} onSelectPackage={handleSelectPackage} />} />
+          <Route path="/custom-menu" element={<CustomMenuPage lang={lang} />} />
           <Route path="/estimator" element={<CostEstimatorPage lang={lang} externalSelectedPackage={selectedPackageForCalc} />} />
           <Route path="/live-stalls" element={<LiveStallsPage lang={lang} />} />
           <Route path="/halls" element={<HallsPage lang={lang} />} />

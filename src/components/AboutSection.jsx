@@ -47,11 +47,18 @@ export default function AboutSection({ lang }) {
                 className="w-full h-[420px] object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-crimson-950/90 via-crimson-900/30 to-transparent flex flex-col justify-end p-6 text-white">
-                <span className="text-[10px] uppercase font-bold tracking-widest text-gold-300">
-                  Proprietor & Master Caterer
-                </span>
-                <h3 className="font-serif text-2xl font-bold text-white">{BRAND_INFO.proprietor}</h3>
-                <p className="text-xs font-tamil text-peach-200 mt-1">{BRAND_INFO.proprietorTamil}</p>
+                <div className="flex flex-wrap items-center gap-2 mb-1">
+                  <span className="text-[10px] uppercase font-bold tracking-widest text-gold-300 bg-black/40 px-2 py-0.5 rounded border border-gold-400/40">
+                    Founder: {BRAND_INFO.founder}
+                  </span>
+                  <span className="text-[10px] uppercase font-bold tracking-widest text-peach-200 bg-crimson-800/80 px-2 py-0.5 rounded border border-peach-300/40">
+                    Co-Founder: {BRAND_INFO.coFounder}
+                  </span>
+                </div>
+                <h3 className="font-serif text-xl sm:text-2xl font-bold text-white">
+                  {BRAND_INFO.founder} & {BRAND_INFO.coFounder}
+                </h3>
+                <p className="text-xs font-tamil text-peach-200 mt-0.5">{BRAND_INFO.leadershipTamil}</p>
                 <p className="text-xs text-stone-200 mt-2">
                   "உணவே மருந்து, விருந்தோம்பலே தர்மம் — Carrying forward the timeless heritage of South Indian wedding cuisine."
                 </p>
@@ -80,8 +87,8 @@ export default function AboutSection({ lang }) {
 
             <p className="text-stone-700 text-sm sm:text-base leading-relaxed">
               {lang === 'ta'
-                ? 'திருச்சி பெரமங்கலம் மற்றும் கரூர் பைபாஸ் ரோட்டில் இயங்கி வரும் ஹரிணி கேட்டரிங் சர்வீஸ், கடந்த பல ஆண்டுகளாக ஆயிரக்கணக்கான திருமணங்கள், சீமந்தங்கள் மற்றும் இல்லற நிகழ்வுகளுக்கு தரமான அறுசுவை விருந்தை வழங்கி வருகிறது.'
-                : 'Founded under the divine blessings of Sanjeeviraya Perumal, Harinee Catering under the leadership of V. Manivannan brings legendary culinary expertise to every auspicious occasion in Trichy, Thanjavur, Karur, and across Tamil Nadu.'}
+                ? 'திருச்சி பெரமங்கலம் மற்றும் கரூர் பைபாஸ் ரோட்டில் இயங்கி வரும் ஹரிணி கேட்டரிங் சர்வீஸ், நிறுவனர் V. மணிவண்ணன் மற்றும் இணை நிறுவனர் தீபா ஆகியோரின் தலைமையில், கடந்த பல ஆண்டுகளாக ஆயிரக்கணக்கான திருமணங்கள், சீமந்தங்கள் மற்றும் இல்லற நிகழ்வுகளுக்கு தரமான அறுசுவை விருந்தை வழங்கி வருகிறது.'
+                : 'Founded under the divine blessings of Sanjeeviraya Perumal, Harinee Catering under the visionary leadership of Founder V. Manivannan and Co-Founder Deepa brings legendary culinary expertise to every auspicious occasion in Trichy, Thanjavur, Karur, and across Tamil Nadu.'}
             </p>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-2">

@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import confetti from 'canvas-confetti';
-import { Calculator, Users, Calendar, Sparkles, MessageCircle, Phone, CheckSquare, Square, Printer, CheckCircle2, ShieldCheck, FileText, X } from 'lucide-react';
-import { BRAND_INFO, LIVE_STALLS, MENU_CATEGORIES } from '../data/cateringData';
+import html2pdf from 'html2pdf.js';
+import { 
+  Calculator, Users, Sparkles, MessageCircle, Phone, 
+  CheckSquare, Square, Printer, Download, Eye, FileText, 
+  X, ArrowRight, RefreshCw, ShieldCheck
+} from 'lucide-react';
+import { BRAND_INFO, LIVE_STALLS } from '../data/cateringData';
 
 export default function CostCalculator({ lang, externalSelectedPackage }) {
   const [eventType, setEventType] = useState('Wedding / Reception');
@@ -11,7 +17,7 @@ export default function CostCalculator({ lang, externalSelectedPackage }) {
   const [customerPhone, setCustomerPhone] = useState('');
   const [eventVenue, setEventVenue] = useState('Trichy');
 
-  // Selected Meals
+  // Selected Meal Tiers
   const [selectedBreakfast, setSelectedBreakfast] = useState(null);
   const [selectedLunch, setSelectedLunch] = useState(230);
   const [selectedSnacks, setSelectedSnacks] = useState(null);
@@ -19,6 +25,10 @@ export default function CostCalculator({ lang, externalSelectedPackage }) {
 
   // Selected Live Stalls
   const [selectedStalls, setSelectedStalls] = useState(['ice-cream', 'sweet-beeda']);
+
+  // Modals & Loading
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
 
   useEffect(() => {
     if (externalSelectedPackage) {
@@ -37,25 +47,20 @@ export default function CostCalculator({ lang, externalSelectedPackage }) {
   };
 
   // Calculations
+  const perPlateTotal = (selectedBreakfast || 0) + (selectedLunch || 0) + (selectedSnacks || 0) + (selectedDinner || 0);
   const breakfastCost = (selectedBreakfast || 0) * guestCount;
   const lunchCost = (selectedLunch || 0) * guestCount;
   const snacksCost = (selectedSnacks || 0) * guestCount;
   const dinnerCost = (selectedDinner || 0) * guestCount;
-  
-  const perPlateTotal = (selectedBreakfast || 0) + (selectedLunch || 0) + (selectedSnacks || 0) + (selectedDinner || 0);
   const foodTotal = perPlateTotal * guestCount;
-  
+
   const stallsCount = selectedStalls.length;
   const stallsEstimatedTotal = stallsCount * 3500;
-  
   const grandTotal = foodTotal + stallsEstimatedTotal;
 
+  // Send WhatsApp Quote
   const handleSendWhatsAppQuote = () => {
-    confetti({
-      particleCount: 70,
-      spread: 60,
-      origin: { y: 0.6 }
-    });
+    confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
 
     const stallsNames = selectedStalls
       .map(id => LIVE_STALLS.find(s => s.id === id)?.name)
@@ -71,7 +76,7 @@ export default function CostCalculator({ lang, externalSelectedPackage }) {
 *Venue:* ${eventVenue}
 *Guest Count:* ${guestCount} Guests (Min 100)
 
-*Selected Menu Plan:*
+*Selected Menu Packages:*
 • Breakfast: ${selectedBreakfast ? `₹${selectedBreakfast}/plate` : 'Not Selected'}
 • Lunch: ${selectedLunch ? `₹${selectedLunch}/plate` : 'Not Selected'}
 • Evening Snacks: ${selectedSnacks ? `₹${selectedSnacks}/plate` : 'Not Selected'}
@@ -85,288 +90,206 @@ ${stallsNames || 'None'}
 
 *Grand Estimated Total:* ₹${grandTotal.toLocaleString('en-IN')} (Approx)
 ----------------------------------------
-_Please confirm date availability and provide final booking consultation._`;
+_Founder: V. Manivannan • Co-Founder: Deepa_
+_Please confirm date availability and guide us for booking._`;
 
     const encoded = encodeURIComponent(text);
     window.open(`https://wa.me/91${BRAND_INFO.primaryPhone}?text=${encoded}`, '_blank');
   };
 
-  const handlePrint = () => {
-    const printWindow = window.open('', '_blank', 'width=850,height=950');
-    if (!printWindow) {
-      alert('Please allow popups to print the quotation.');
-      return;
-    }
-
+  // Build 1-Page A4 Letterhead HTML
+  const generateQuotationHTML = () => {
     const todayDate = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
     const selectedStallsNames = selectedStalls.map(id => LIVE_STALLS.find(s => s.id === id)?.name).filter(Boolean).join(', ');
 
-    const htmlContent = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>Harinee Catering - Quotation</title>
-        <meta charset="utf-8" />
-        <style>
-          @page {
-            size: A4 portrait;
-            margin: 10mm;
-          }
-          * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-          }
-          body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            color: #1a1a1a;
-            background: #ffffff;
-            padding: 10px;
-            font-size: 12px;
-            line-height: 1.4;
-          }
-          .letterhead {
-            border-bottom: 2px solid #8A101C;
-            padding-bottom: 12px;
-            margin-bottom: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-          }
-          .brand-title {
-            font-size: 22px;
-            font-weight: 900;
-            color: #8A101C;
-            letter-spacing: -0.5px;
-          }
-          .brand-subtitle {
-            font-size: 10px;
-            font-weight: 700;
-            color: #CA8A04;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-          }
-          .header-meta {
-            text-align: right;
-            font-size: 11px;
-            color: #4b5563;
-          }
-          .grid-info {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            padding: 12px;
-            background: #faf7f2;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            margin-bottom: 16px;
-          }
-          .info-label {
-            font-size: 9px;
-            font-weight: 700;
-            color: #6b7280;
-            text-transform: uppercase;
-          }
-          .info-val {
-            font-size: 12px;
-            font-weight: 700;
-            color: #111827;
-          }
-          table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 16px;
-          }
-          th {
-            background-color: #8A101C;
-            color: #ffffff;
-            font-weight: 700;
-            text-align: left;
-            padding: 8px 10px;
-            font-size: 11px;
-            border: 1px solid #8A101C;
-          }
-          td {
-            padding: 8px 10px;
-            border: 1px solid #e5e7eb;
-            font-size: 11px;
-          }
-          .text-center { text-align: center; }
-          .text-right { text-align: right; }
-          .font-bold { font-weight: 700; }
-          .total-row td {
-            background-color: #fdf2f2;
-            font-weight: 800;
-            color: #8A101C;
-            font-size: 13px;
-            border-top: 2px solid #8A101C;
-          }
-          .footer-section {
-            display: grid;
-            grid-template-columns: 1.5fr 1fr;
-            gap: 16px;
-            border-top: 1px solid #e5e7eb;
-            padding-top: 12px;
-            margin-top: 12px;
-          }
-          .terms {
-            font-size: 10px;
-            color: #4b5563;
-            line-height: 1.5;
-          }
-          .sign-box {
-            text-align: right;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-          }
-          .address-bar {
-            margin-top: 20px;
-            padding-top: 8px;
-            border-top: 1px solid #f3f4f6;
-            text-align: center;
-            font-size: 9px;
-            color: #6b7280;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="letterhead">
-          <div style="display: flex; align-items: center; gap: 12px;">
-            <img src="/logo.jpeg" alt="Logo" style="width: 55px; height: 55px; border-radius: 8px; object-fit: contain; border: 1px solid #e5e7eb;" />
-            <div>
-              <div class="brand-title">HARINEE CATERING</div>
-              <div class="brand-subtitle">FEEL THE TASTE • 100% PURE VEGETARIAN</div>
-              <div style="font-size: 10px; color: #4b5563;">Proprietor: V. Manivannan • Trichy</div>
-            </div>
-          </div>
-          <div class="header-meta">
-            <div style="font-weight: 800; color: #8A101C; font-size: 12px;">EVENT QUOTATION</div>
-            <div>Phone: +91 96982 97590</div>
-            <div>Date: ${todayDate}</div>
-          </div>
-        </div>
-
-        <div class="grid-info">
+    return `
+      <div style="width: 100%; max-width: 200mm; margin: 0 auto; background: #ffffff; color: #1a1a1a; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; font-size: 11px; line-height: 1.35; padding: 10px;">
+        <div style="border-bottom: 2.5px solid #8A101C; padding-bottom: 10px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
           <div>
-            <div class="info-label">Customer Name</div>
-            <div class="info-val">${customerName || 'Valued Customer'}</div>
-            <div style="font-size: 11px; margin-top: 2px;">Phone: <strong>${customerPhone || 'Not Specified'}</strong></div>
+            <div style="font-size: 22px; font-weight: 900; color: #8A101C; letter-spacing: -0.5px;">HARINEE CATERING</div>
+            <div style="font-size: 10px; font-weight: 700; color: #CA8A04; letter-spacing: 1px; text-transform: uppercase;">FEEL THE TASTE • 100% PURE VEGETARIAN</div>
+            <div style="font-size: 10px; color: #374151; font-weight: 600; margin-top: 2px;">Founder: V. Manivannan • Co-Founder: Deepa • Trichy</div>
           </div>
-          <div style="text-align: right;">
-            <div class="info-label">Event Details</div>
-            <div class="info-val">${eventType}</div>
-            <div style="font-size: 11px; margin-top: 2px;">Date: <strong>${eventDate || 'To be decided'}</strong> • Venue: <strong>${eventVenue}</strong></div>
-            <div style="font-size: 11px; color: #8A101C; font-weight: 700; margin-top: 2px;">Guaranteed: ${guestCount} Guests</div>
+          <div style="text-align: right; font-size: 10.5px; color: #4b5563;">
+            <div style="font-weight: 800; color: #8A101C; font-size: 12.5px;">OFFICIAL QUOTATION ESTIMATE</div>
+            <div>Date: ${todayDate}</div>
+            <div>Support: 96982 97590 / 79040 96754</div>
           </div>
         </div>
 
-        <table>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 10px; background: #faf7f2; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 12px;">
+          <div><strong style="color: #6b7280; font-size: 9.5px; text-transform: uppercase;">Client Name:</strong> <div style="font-weight: 700;">${customerName || 'Valued Customer'}</div></div>
+          <div><strong style="color: #6b7280; font-size: 9.5px; text-transform: uppercase;">Phone:</strong> <div style="font-weight: 700;">${customerPhone || 'Not specified'}</div></div>
+          <div><strong style="color: #6b7280; font-size: 9.5px; text-transform: uppercase;">Event Type:</strong> <div style="font-weight: 700;">${eventType}</div></div>
+          <div><strong style="color: #6b7280; font-size: 9.5px; text-transform: uppercase;">Event Date:</strong> <div style="font-weight: 700;">${eventDate || 'To be decided'}</div></div>
+          <div><strong style="color: #6b7280; font-size: 9.5px; text-transform: uppercase;">Venue:</strong> <div style="font-weight: 700;">${eventVenue}</div></div>
+          <div><strong style="color: #6b7280; font-size: 9.5px; text-transform: uppercase;">Estimated Guests:</strong> <div style="font-weight: 700;">${guestCount} Persons (Min 100)</div></div>
+        </div>
+
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 10.5px;">
           <thead>
-            <tr>
-              <th style="width: 35px;" class="text-center">Sl.</th>
-              <th>Meal / Service Description</th>
-              <th class="text-center" style="width: 90px;">Rate / Plate</th>
-              <th class="text-center" style="width: 70px;">Guests</th>
-              <th class="text-right" style="width: 120px;">Amount</th>
+            <tr style="background-color: #8A101C; color: #ffffff;">
+              <th style="padding: 6px 8px; text-align: center; border: 1px solid #8A101C; width: 35px;">#</th>
+              <th style="padding: 6px 8px; text-align: left; border: 1px solid #8A101C;">Menu Package / Live Counter</th>
+              <th style="padding: 6px 8px; text-align: center; border: 1px solid #8A101C; width: 85px;">Rate / Plate</th>
+              <th style="padding: 6px 8px; text-align: center; border: 1px solid #8A101C; width: 65px;">Guests</th>
+              <th style="padding: 6px 8px; text-align: right; border: 1px solid #8A101C; width: 100px;">Total (₹)</th>
             </tr>
           </thead>
           <tbody>
             ${selectedBreakfast ? `
               <tr>
-                <td class="text-center">1</td>
-                <td class="font-bold">Morning Tiffin Feast (₹${selectedBreakfast} Tier)</td>
-                <td class="text-center font-bold">₹${selectedBreakfast}</td>
-                <td class="text-center">${guestCount}</td>
-                <td class="text-right font-bold">₹${breakfastCost.toLocaleString('en-IN')}</td>
+                <td style="padding: 6px 8px; border: 1px solid #e5e7eb; text-align: center;">1</td>
+                <td style="padding: 6px 8px; border: 1px solid #e5e7eb; font-weight: 700;">Morning Tiffin Feast (₹${selectedBreakfast} Tier)</td>
+                <td style="padding: 6px 8px; border: 1px solid #e5e7eb; text-align: center; font-weight: 700;">₹${selectedBreakfast}</td>
+                <td style="padding: 6px 8px; border: 1px solid #e5e7eb; text-align: center;">${guestCount}</td>
+                <td style="padding: 6px 8px; border: 1px solid #e5e7eb; text-align: right; font-weight: 700;">₹${breakfastCost.toLocaleString('en-IN')}</td>
               </tr>
             ` : ''}
 
             ${selectedLunch ? `
               <tr>
-                <td class="text-center">2</td>
-                <td class="font-bold">Grand Lunch Saapadu / Valaikappu (₹${selectedLunch} Tier)</td>
-                <td class="text-center font-bold">₹${selectedLunch}</td>
-                <td class="text-center">${guestCount}</td>
-                <td class="text-right font-bold">₹${lunchCost.toLocaleString('en-IN')}</td>
+                <td style="padding: 6px 8px; border: 1px solid #e5e7eb; text-align: center;">2</td>
+                <td style="padding: 6px 8px; border: 1px solid #e5e7eb; font-weight: 700;">Grand Lunch Saapadu / Valaikappu (₹${selectedLunch} Tier)</td>
+                <td style="padding: 6px 8px; border: 1px solid #e5e7eb; text-align: center; font-weight: 700;">₹${selectedLunch}</td>
+                <td style="padding: 6px 8px; border: 1px solid #e5e7eb; text-align: center;">${guestCount}</td>
+                <td style="padding: 6px 8px; border: 1px solid #e5e7eb; text-align: right; font-weight: 700;">₹${lunchCost.toLocaleString('en-IN')}</td>
               </tr>
             ` : ''}
 
             ${selectedSnacks ? `
               <tr>
-                <td class="text-center">3</td>
-                <td class="font-bold">Evening High-Tea & Snacks Combo (Sweet + Savory + Coffee/Tea + Water)</td>
-                <td class="text-center font-bold">₹${selectedSnacks}</td>
-                <td class="text-center">${guestCount}</td>
-                <td class="text-right font-bold">₹${snacksCost.toLocaleString('en-IN')}</td>
+                <td style="padding: 6px 8px; border: 1px solid #e5e7eb; text-align: center;">3</td>
+                <td style="padding: 6px 8px; border: 1px solid #e5e7eb; font-weight: 700;">Evening High-Tea & Snacks Combo</td>
+                <td style="padding: 6px 8px; border: 1px solid #e5e7eb; text-align: center; font-weight: 700;">₹${selectedSnacks}</td>
+                <td style="padding: 6px 8px; border: 1px solid #e5e7eb; text-align: center;">${guestCount}</td>
+                <td style="padding: 6px 8px; border: 1px solid #e5e7eb; text-align: right; font-weight: 700;">₹${snacksCost.toLocaleString('en-IN')}</td>
               </tr>
             ` : ''}
 
             ${selectedDinner ? `
               <tr>
-                <td class="text-center">4</td>
-                <td class="font-bold">Night Tiffin & Live Dinner Buffet (₹${selectedDinner} Tier)</td>
-                <td class="text-center font-bold">₹${selectedDinner}</td>
-                <td class="text-center">${guestCount}</td>
-                <td class="text-right font-bold">₹${dinnerCost.toLocaleString('en-IN')}</td>
+                <td style="padding: 6px 8px; border: 1px solid #e5e7eb; text-align: center;">4</td>
+                <td style="padding: 6px 8px; border: 1px solid #e5e7eb; font-weight: 700;">Night Tiffin & Live Dinner Buffet (₹${selectedDinner} Tier)</td>
+                <td style="padding: 6px 8px; border: 1px solid #e5e7eb; text-align: center; font-weight: 700;">₹${selectedDinner}</td>
+                <td style="padding: 6px 8px; border: 1px solid #e5e7eb; text-align: center;">${guestCount}</td>
+                <td style="padding: 6px 8px; border: 1px solid #e5e7eb; text-align: right; font-weight: 700;">₹${dinnerCost.toLocaleString('en-IN')}</td>
               </tr>
             ` : ''}
 
             ${stallsCount > 0 ? `
               <tr style="background: #fafafa;">
-                <td class="text-center">5</td>
-                <td class="font-bold">Live Stalls (${stallsCount}): <span style="font-weight: normal; font-size: 10px;">${selectedStallsNames}</span></td>
-                <td class="text-center">Setup Fee</td>
-                <td class="text-center">${stallsCount} Stalls</td>
-                <td class="text-right font-bold">₹${stallsEstimatedTotal.toLocaleString('en-IN')}</td>
+                <td style="padding: 6px 8px; border: 1px solid #e5e7eb; text-align: center;">5</td>
+                <td style="padding: 6px 8px; border: 1px solid #e5e7eb; font-weight: 700;">Live Counters (${stallsCount}): <span style="font-weight: normal; font-size: 10px;">${selectedStallsNames}</span></td>
+                <td style="padding: 6px 8px; border: 1px solid #e5e7eb; text-align: center;">Setup Fee</td>
+                <td style="padding: 6px 8px; border: 1px solid #e5e7eb; text-align: center;">${stallsCount} Stalls</td>
+                <td style="padding: 6px 8px; border: 1px solid #e5e7eb; text-align: right; font-weight: 700;">₹${stallsEstimatedTotal.toLocaleString('en-IN')}</td>
               </tr>
             ` : ''}
 
-            <tr class="total-row">
-              <td colspan="4" class="text-right" style="padding: 10px;">Grand Estimated Total Amount (Approx):</td>
-              <td class="text-right" style="padding: 10px; font-size: 14px;">₹${grandTotal.toLocaleString('en-IN')}</td>
+            <tr style="background-color: #8A101C; color: #ffffff; font-weight: 800;">
+              <td colspan="4" style="padding: 8px; text-align: right; border: 1px solid #8A101C;">Grand Estimated Total Amount (Approx):</td>
+              <td style="padding: 8px; text-align: right; border: 1px solid #8A101C; font-size: 12.5px;">₹${grandTotal.toLocaleString('en-IN')}</td>
             </tr>
           </tbody>
         </table>
 
-        <div class="footer-section">
-          <div class="terms">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; border-top: 1px solid #e5e7eb; padding-top: 10px; margin-top: 12px;">
+          <div style="font-size: 9.5px; color: #4b5563; max-width: 65%;">
             <strong>Catering Quality & Service Terms:</strong><br />
             • 100% Pure Vegetarian prepared with cold-pressed oils and pure cow ghee.<br />
             • 300ml sealed packaged drinking water included with every dining plate.<br />
-            • Punctual on-site buffet and dining service with trained uniformed staff.
+            • Punctual on-site service with trained uniformed catering staff.<br />
+            • Customizations, tasting consultations & Muhurtham date locks available.
           </div>
-          <div class="sign-box">
-            <div style="font-weight: 800; font-size: 12px; color: #8A101C;">HARINEE CATERING</div>
-            <div style="font-size: 10px; color: #6b7280; margin-top: 25px;">Authorized Signature / V. Manivannan</div>
+          <div style="text-align: right;">
+            <div style="font-weight: 800; font-size: 11px; color: #8A101C;">HARINEE CATERING</div>
+            <div style="font-size: 9.5px; color: #4b5563; margin-top: 16px;">
+              Authorized Signatures /<br />
+              <strong>V. Manivannan (Founder) & Deepa (Co-Founder)</strong>
+            </div>
           </div>
         </div>
 
-        <div class="address-bar">
-          City Office: No. 23, Ravi Mini Hall, Karur Bypass Road, Trichy - 620002 • Head Office: Peramangalam (A), Trichy • Contact: 96982 97590 / 98424 44425
+        <div style="margin-top: 10px; border-top: 1px solid #f3f4f6; padding-top: 6px; text-align: center; font-size: 8.5px; color: #6b7280;">
+          City Office: No. 23, Ravi Mini Hall, Karur Bypass Road, Trichy - 620002 • Head Office: Peramangalam (A), Trichy • Contact: 96982 97590 / 79040 96754
         </div>
-      </body>
-      </html>
+      </div>
     `;
+  };
 
-    printWindow.document.open();
-    printWindow.document.write(htmlContent);
-    printWindow.document.close();
+  // Safe Hidden Iframe Print Fallback
+  const executeIframePrint = () => {
+    const html = `<!DOCTYPE html><html><head><title>Harinee Catering Quotation</title><style>@page{size:A4 portrait;margin:8mm;}body{margin:0;padding:0;}</style></head><body>${generateQuotationHTML()}</body></html>`;
 
-    printWindow.onload = () => {
-      setTimeout(() => {
-        printWindow.focus();
-        printWindow.print();
-      }, 250);
-    };
+    let printFrame = document.getElementById('harinee-print-iframe');
+    if (printFrame) document.body.removeChild(printFrame);
+
+    printFrame = document.createElement('iframe');
+    printFrame.id = 'harinee-print-iframe';
+    printFrame.style.position = 'fixed';
+    printFrame.style.right = '0';
+    printFrame.style.bottom = '0';
+    printFrame.style.width = '0';
+    printFrame.style.height = '0';
+    printFrame.style.border = '0';
+    printFrame.style.visibility = 'hidden';
+    document.body.appendChild(printFrame);
+
+    const frameDoc = printFrame.contentWindow.document;
+    frameDoc.open();
+    frameDoc.write(html);
+    frameDoc.close();
+
+    setTimeout(() => {
+      try {
+        printFrame.contentWindow.focus();
+        printFrame.contentWindow.print();
+      } catch (err) {
+        console.error('Print error:', err);
+      }
+    }, 300);
+  };
+
+  // Direct 1-Click PDF Download
+  const handleDownloadPDF = async () => {
+    setIsGeneratingPdf(true);
+    confetti({ particleCount: 50, spread: 50, origin: { y: 0.7 } });
+
+    try {
+      const element = document.getElementById('cost-calc-pdf-template');
+      if (!element) {
+        executeIframePrint();
+        return;
+      }
+
+      const opt = {
+        margin: [6, 6, 6, 6],
+        filename: `Harinee_Catering_Quotation_${(customerName || 'Official').replace(/\s+/g, '_')}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { 
+          scale: 2, 
+          useCORS: true, 
+          logging: false,
+          scrollX: 0,
+          scrollY: 0,
+          windowWidth: 800
+        },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      await html2pdf().set(opt).from(element).save();
+    } catch (err) {
+      console.error('html2pdf error, using iframe print:', err);
+      executeIframePrint();
+    } finally {
+      setIsGeneratingPdf(false);
+    }
   };
 
   return (
     <>
-      {/* 1. Main Interactive Screen UI (Hidden during Print) */}
       <section id="calculator" className="py-16 md:py-24 bg-peach-silk relative overflow-hidden scroll-mt-24 no-print">
-        
-        {/* Background Accent */}
         <div className="absolute -right-20 top-1/2 w-80 h-80 bg-peach-300/30 rounded-full blur-3xl pointer-events-none -z-10"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -378,12 +301,12 @@ _Please confirm date availability and provide final booking consultation._`;
               <span>{lang === 'ta' ? 'உடனடி பட்ஜெட் கணக்கீடு' : 'Interactive Cost Estimator'}</span>
             </div>
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-extrabold text-crimson-950">
-              {lang === 'ta' ? 'உங்கள் நிகழ்விற்கான செலவு மதிப்பீடு' : 'Build Your Custom Event Quotation'}
+              {lang === 'ta' ? 'உங்கள் நிகழ்விற்கான செலவு மதிப்பீடு' : 'Instant Event Cost Estimator'}
             </h2>
             <p className="text-stone-600 text-sm sm:text-base leading-relaxed">
               {lang === 'ta'
-                ? 'விருந்தினர்களின் எண்ணிக்கை, உணவு வேளைகள் மற்றும் ஸ்டால்களைத் தேர்வு செய்து உடனடி கட்டண மதிப்பீட்டைப் பெறுங்கள்.'
-                : 'Customize meals, guest counts, and live counters. Get instant transparent pricing with WhatsApp quote generation.'}
+                ? 'விருந்தினர்களின் எண்ணிக்கை மற்றும் உணவு வேளைகளைத் தேர்வு செய்து உடனடி கட்டண மதிப்பீட்டைப் பெறுங்கள்.'
+                : 'Select meal package tiers, guest counts, and live counters for instant transparent quotation.'}
             </p>
           </div>
 
@@ -452,7 +375,6 @@ _Please confirm date availability and provide final booking consultation._`;
                   * Minimum catering limit: 100 persons (மினிமம் 100 நபர்)
                 </p>
 
-                {/* Slider */}
                 <input
                   type="range"
                   min="100"
@@ -463,11 +385,11 @@ _Please confirm date availability and provide final booking consultation._`;
                   className="w-full accent-crimson-700 h-2 bg-peach-200 rounded-lg cursor-pointer"
                 />
 
-                {/* Quick Presets */}
                 <div className="flex items-center gap-2 mt-3 overflow-x-auto">
                   {[100, 200, 350, 500, 1000, 1500].map(cnt => (
                     <button
                       key={cnt}
+                      type="button"
                       onClick={() => setGuestCount(cnt)}
                       className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
                         guestCount === cnt 
@@ -481,12 +403,32 @@ _Please confirm date availability and provide final booking consultation._`;
                 </div>
               </div>
 
-              {/* 3. Meal Slots Selection */}
+              {/* 3. Meal Slots Selection + Custom Menu Callout */}
               <div>
-                <h3 className="font-serif font-bold text-lg text-crimson-950 mb-4 flex items-center gap-2">
-                  <span className="w-6 h-6 rounded-full bg-crimson-800 text-white text-xs flex items-center justify-center font-bold">3</span>
-                  <span>{lang === 'ta' ? 'உணவு வேளைகள் தேர்வு' : 'Select Required Meal Slots'}</span>
-                </h3>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-serif font-bold text-lg text-crimson-950 flex items-center gap-2">
+                    <span className="w-6 h-6 rounded-full bg-crimson-800 text-white text-xs flex items-center justify-center font-bold">3</span>
+                    <span>{lang === 'ta' ? 'உணவு வேளைகள் தேர்வு' : 'Select Required Meal Slots'}</span>
+                  </h3>
+                </div>
+
+                {/* Custom Menu Banner Callout */}
+                <div className="mb-4 p-3.5 rounded-2xl bg-gradient-to-r from-amber-50 to-peach-50 border border-amber-300 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2.5">
+                    <Sparkles className="w-4 h-4 text-amber-600 flex-shrink-0" />
+                    <div>
+                      <p className="text-xs font-bold text-amber-950">Want a 100% Custom Dish-by-Dish Menu?</p>
+                      <p className="text-[11px] text-stone-600">Handpick individual dishes for breakfast, lunch & dinner</p>
+                    </div>
+                  </div>
+                  <Link
+                    to="/custom-menu"
+                    className="px-3.5 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold flex items-center gap-1 shadow-sm transition-all flex-shrink-0"
+                  >
+                    <span>Custom Planner</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
 
                 <div className="space-y-4">
                   {/* Morning Breakfast */}
@@ -499,6 +441,7 @@ _Please confirm date availability and provide final booking consultation._`;
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
                       <button
+                        type="button"
                         onClick={() => setSelectedBreakfast(null)}
                         className={`px-2 py-1.5 rounded-lg text-xs font-medium transition-all ${
                           selectedBreakfast === null ? 'bg-stone-800 text-white' : 'bg-white border border-peach-200 text-stone-600'
@@ -509,6 +452,7 @@ _Please confirm date availability and provide final booking consultation._`;
                       {[200, 250, 300, 350].map(price => (
                         <button
                           key={price}
+                          type="button"
                           onClick={() => setSelectedBreakfast(price)}
                           className={`px-2 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                             selectedBreakfast === price ? 'bg-crimson-700 text-white shadow-sm' : 'bg-white border border-peach-200 text-stone-700 hover:bg-peach-100'
@@ -530,6 +474,7 @@ _Please confirm date availability and provide final booking consultation._`;
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-6 gap-2">
                       <button
+                        type="button"
                         onClick={() => setSelectedLunch(null)}
                         className={`px-2 py-1.5 rounded-lg text-xs font-medium transition-all ${
                           selectedLunch === null ? 'bg-stone-800 text-white' : 'bg-white border border-peach-200 text-stone-600'
@@ -540,6 +485,7 @@ _Please confirm date availability and provide final booking consultation._`;
                       {[180, 230, 300, 350, 500].map(price => (
                         <button
                           key={price}
+                          type="button"
                           onClick={() => setSelectedLunch(price)}
                           className={`px-2 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                             selectedLunch === price ? 'bg-crimson-700 text-white shadow-sm' : 'bg-white border border-peach-200 text-stone-700 hover:bg-peach-100'
@@ -561,6 +507,7 @@ _Please confirm date availability and provide final booking consultation._`;
                     </div>
                     <div className="grid grid-cols-2 gap-2">
                       <button
+                        type="button"
                         onClick={() => setSelectedSnacks(null)}
                         className={`px-3 py-2 rounded-lg text-xs font-medium transition-all ${
                           selectedSnacks === null ? 'bg-stone-800 text-white' : 'bg-white border border-peach-200 text-stone-600'
@@ -569,6 +516,7 @@ _Please confirm date availability and provide final booking consultation._`;
                         No Evening Snacks
                       </button>
                       <button
+                        type="button"
                         onClick={() => setSelectedSnacks(60)}
                         className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
                           selectedSnacks === 60 ? 'bg-crimson-700 text-white shadow-sm' : 'bg-white border border-peach-200 text-stone-700 hover:bg-peach-100'
@@ -589,6 +537,7 @@ _Please confirm date availability and provide final booking consultation._`;
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-7 gap-1.5">
                       <button
+                        type="button"
                         onClick={() => setSelectedDinner(null)}
                         className={`px-2 py-1.5 rounded-lg text-xs font-medium transition-all ${
                           selectedDinner === null ? 'bg-stone-800 text-white' : 'bg-white border border-peach-200 text-stone-600'
@@ -599,6 +548,7 @@ _Please confirm date availability and provide final booking consultation._`;
                       {[200, 250, 300, 350, 450, 800].map(price => (
                         <button
                           key={price}
+                          type="button"
                           onClick={() => setSelectedDinner(price)}
                           className={`px-2 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                             selectedDinner === price ? 'bg-crimson-700 text-white shadow-sm' : 'bg-white border border-peach-200 text-stone-700 hover:bg-peach-100'
@@ -628,6 +578,7 @@ _Please confirm date availability and provide final booking consultation._`;
                     return (
                       <button
                         key={stall.id}
+                        type="button"
                         onClick={() => toggleStall(stall.id)}
                         className={`p-2 rounded-xl text-left border text-xs flex items-start gap-2 transition-all ${
                           isChecked
@@ -657,8 +608,6 @@ _Please confirm date availability and provide final booking consultation._`;
             <div className="lg:col-span-5 sticky top-28 space-y-4">
               
               <div className="bg-gradient-to-br from-crimson-900 via-crimson-950 to-stone-900 text-white rounded-3xl p-6 sm:p-7 shadow-2xl border border-gold-400/30 relative overflow-hidden">
-                
-                {/* Golden corner shimmer */}
                 <div className="absolute top-0 right-0 w-32 h-32 bg-gold-400/10 rounded-full blur-2xl pointer-events-none"></div>
 
                 <div className="flex items-center justify-between pb-4 border-b border-white/10">
@@ -758,6 +707,7 @@ _Please confirm date availability and provide final booking consultation._`;
                 {/* Main Actions */}
                 <div className="space-y-2.5 pt-2">
                   <button
+                    type="button"
                     onClick={handleSendWhatsAppQuote}
                     className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg transition-all transform active:scale-98"
                   >
@@ -766,34 +716,55 @@ _Please confirm date availability and provide final booking consultation._`;
                   </button>
 
                   <div className="flex gap-2">
-                    <a
-                      href={`tel:${BRAND_INFO.primaryPhone}`}
-                      className="flex-1 py-2.5 px-3 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
+                    <button
+                      type="button"
+                      onClick={handleDownloadPDF}
+                      disabled={isGeneratingPdf}
+                      className="flex-1 py-2.5 px-3 rounded-xl bg-gold-400 text-stone-950 font-bold text-xs flex items-center justify-center gap-1.5 hover:bg-gold-300 transition-colors shadow-sm disabled:opacity-50"
+                      title="Download 1-Page Official Quotation PDF"
                     >
-                      <Phone className="w-3.5 h-3.5 text-gold-300" />
-                      <span>Call: 96982 97590</span>
-                    </a>
+                      {isGeneratingPdf ? (
+                        <>
+                          <RefreshCw className="w-4 h-4 animate-spin text-stone-950" />
+                          <span>Generating...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Download className="w-4 h-4 text-stone-950" />
+                          <span>Download PDF</span>
+                        </>
+                      )}
+                    </button>
 
                     <button
-                      onClick={handlePrint}
-                      className="px-4 py-2.5 rounded-xl bg-gold-400 text-stone-950 font-bold text-xs flex items-center justify-center gap-1.5 hover:bg-gold-300 transition-colors shadow-sm"
-                      title="Print 1-Page Official Quotation"
+                      type="button"
+                      onClick={() => setShowPreviewModal(true)}
+                      className="px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors border border-white/20"
+                      title="Preview Quotation On Screen"
                     >
-                      <Printer className="w-4 h-4 text-stone-950" />
-                      <span>Print 1-Page PDF</span>
+                      <Eye className="w-3.5 h-3.5 text-gold-300" />
+                      <span>Preview</span>
                     </button>
                   </div>
+
+                  <a
+                    href={`tel:${BRAND_INFO.primaryPhone}`}
+                    className="w-full py-2 px-3 rounded-xl bg-white/5 hover:bg-white/10 text-stone-300 text-xs font-medium flex items-center justify-center gap-1.5 transition-colors text-center"
+                  >
+                    <Phone className="w-3 h-3 text-gold-400" />
+                    <span>Direct Call: 96982 97590 (Founder V. Manivannan & Deepa)</span>
+                  </a>
                 </div>
 
               </div>
 
-              {/* Chef Guarantee Notice */}
+              {/* Founders Guarantee Notice */}
               <div className="p-4 rounded-2xl bg-white border border-peach-200 text-xs text-stone-700 flex items-start gap-3 shadow-sm">
                 <div className="w-7 h-7 rounded-lg bg-leaf-50 border border-leaf-200 text-leaf-700 flex items-center justify-center flex-shrink-0">
                   ✨
                 </div>
                 <p className="leading-relaxed">
-                  <strong className="text-crimson-900">Chef V. Manivannan Guarantee:</strong> All menu packages can be personalized according to family preferences and regional traditions.
+                  <strong className="text-crimson-900">Founder V. Manivannan & Co-Founder Deepa Guarantee:</strong> All menu packages can be personalized according to family preferences, regional tastes, and auspicious dates.
                 </p>
               </div>
 
@@ -803,7 +774,72 @@ _Please confirm date availability and provide final booking consultation._`;
 
         </div>
       </section>
+
+      {/* On-Screen Quotation Preview Modal */}
+      {showPreviewModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4 overflow-y-auto no-print">
+          <div className="bg-white rounded-3xl max-w-4xl w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden border border-peach-200">
+            <div className="px-6 py-4 bg-gradient-to-r from-crimson-950 via-crimson-900 to-stone-900 text-white flex items-center justify-between border-b border-gold-500/30">
+              <div className="flex items-center gap-2.5">
+                <FileText className="w-5 h-5 text-gold-300" />
+                <div>
+                  <h3 className="font-serif font-bold text-base text-white">Harinee Catering - Official Quotation Preview</h3>
+                  <p className="text-[11px] text-peach-200">Founder: V. Manivannan • Co-Founder: Deepa</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleDownloadPDF}
+                  className="px-4 py-2 rounded-xl bg-gold-400 hover:bg-gold-300 text-stone-950 font-bold text-xs flex items-center gap-1.5 shadow-sm transition-all"
+                >
+                  <Download className="w-4 h-4" />
+                  <span>Download PDF</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={executeIframePrint}
+                  className="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-medium text-xs flex items-center gap-1 transition-colors"
+                >
+                  <Printer className="w-4 h-4" />
+                  <span>Print</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowPreviewModal(false)}
+                  className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs transition-colors"
+                  aria-label="Close Preview"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            <div className="p-4 sm:p-6 overflow-y-auto flex-1 bg-stone-100 flex justify-center">
+              <div className="w-full max-w-[210mm] bg-white shadow-lg rounded-xl overflow-hidden p-6 sm:p-8 border border-stone-200">
+                <div dangerouslySetInnerHTML={{ __html: generateQuotationHTML() }} />
+              </div>
+            </div>
+
+            <div className="px-6 py-3 bg-white border-t border-peach-200 flex items-center justify-between text-xs text-stone-600">
+              <span>* 1-Page Official Quotation with Founder V. Manivannan & Co-Founder Deepa</span>
+              <button
+                type="button"
+                onClick={() => setShowPreviewModal(false)}
+                className="px-4 py-1.5 rounded-lg border border-stone-300 hover:bg-stone-50 font-medium text-stone-700"
+              >
+                Close Preview
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Hidden PDF Printable Template (rendered for html2pdf direct download with zero clipping) */}
+      <div style={{ position: 'absolute', left: 0, top: 0, width: '740px', zIndex: -9999, pointerEvents: 'none', background: '#ffffff' }}>
+        <div id="cost-calc-pdf-template" dangerouslySetInnerHTML={{ __html: generateQuotationHTML() }} />
+      </div>
     </>
   );
 }
-

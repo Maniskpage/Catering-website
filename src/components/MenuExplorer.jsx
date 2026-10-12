@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { MENU_CATEGORIES } from '../data/cateringData';
-import { Utensils, CheckCircle2, Search, Filter, Sparkles, Droplets, ArrowRight, MessageSquareQuote } from 'lucide-react';
+import { Utensils, CheckCircle2, Search, Filter, Sparkles, Droplets, ArrowRight, MessageSquareQuote, SlidersHorizontal } from 'lucide-react';
 
 // Common search alias map for transliterations
 const searchAliases = {
@@ -352,6 +353,43 @@ export default function MenuExplorer({ lang, onSelectPackage }) {
             })}
           </div>
         )}
+
+        {/* Custom Menu & Budget Banner */}
+        <div className="mt-12 p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-amber-900 via-crimson-950 to-stone-900 text-white border border-gold-400/40 shadow-luxury flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="space-y-2 text-center md:text-left">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gold-400/20 text-gold-300 text-xs font-bold uppercase tracking-wider">
+              <SlidersHorizontal className="w-3.5 h-3.5" />
+              <span>100% Customized Catering</span>
+            </div>
+            <h3 className="font-serif text-xl sm:text-2xl font-bold text-white">
+              {lang === 'ta' ? 'உங்கள் விருப்பத்திற்கேற்ப தனிப்பயன் மெனு தேவையா?' : 'Want to Customize Your Own Menu & Budget?'}
+            </h3>
+            <p className="text-stone-300 text-xs sm:text-sm max-w-xl leading-relaxed">
+              {lang === 'ta'
+                ? 'நிறுவனர் V. மணிவண்ணன் & இணை நிறுவனர் தீபா அவர்கள் உங்கள் குடும்ப பட்ஜெட் மற்றும் விருந்தினர்களின் ரசனைக்கேற்ப தனிப்பயன் மெனுவை வடிவமைப்பார்கள்.'
+                : 'Founder V. Manivannan & Co-Founder Deepa will personally craft a custom menu package matching your budget, dietary preferences, and regional culinary traditions.'}
+            </p>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center gap-3 flex-shrink-0">
+            <Link
+              to="/custom-menu"
+              className="px-6 py-3 rounded-2xl bg-gold-400 hover:bg-gold-300 text-stone-950 font-bold text-xs sm:text-sm shadow-md transition-all flex items-center gap-2 transform active:scale-95"
+            >
+              <Sparkles className="w-4 h-4 text-stone-950" />
+              <span>Open Custom Dish Planner</span>
+            </Link>
+            <a
+              href="https://wa.me/919698297590?text=Hello%20Harinee%20Catering,%20I%20want%20a%20custom%20menu%20quotation%20for%20my%20event."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-5 py-3 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-semibold text-xs sm:text-sm border border-white/20 transition-all flex items-center gap-1.5"
+            >
+              <span>WhatsApp Founders</span>
+              <ArrowRight className="w-4 h-4 text-gold-300" />
+            </a>
+          </div>
+        </div>
 
       </div>
     </section>

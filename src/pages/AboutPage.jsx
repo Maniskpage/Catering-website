@@ -9,9 +9,9 @@ export default function AboutPage({ lang }) {
   return (
     <div className="pt-24 pb-16 bg-white min-h-screen">
       <SEOHead
-        title="About Chef V. Manivannan & Harinee Catering Trichy | Pure Veg Tradition"
-        description="Learn about Harinee Catering service in Trichy, founded by Chef V. Manivannan. Dedicated to 100% pure vegetarian authentic South Indian culinary excellence, pure cow ghee, and hygienic catering."
-        keywords="about harinee catering, chef v manivannan trichy caterer, pure veg catering history trichy, best traditional catering service trichy"
+        title="About Founder V. Manivannan & Co-Founder Deepa | Harinee Catering Trichy"
+        description="Learn about Harinee Catering in Trichy, founded by V. Manivannan and Co-Founder Deepa. Dedicated to 100% pure vegetarian authentic South Indian culinary excellence, pure cow ghee, and hygienic catering."
+        keywords="about harinee catering, founder v manivannan trichy, co-founder deepa harinee catering, pure veg catering history trichy, best traditional catering service trichy"
       />
 
       {/* Page Header */}
@@ -28,8 +28,8 @@ export default function AboutPage({ lang }) {
 
           <p className="text-stone-300 text-xs sm:text-base max-w-2xl mx-auto leading-relaxed">
             {lang === 'ta'
-              ? 'தலைமை: சஞ்சீவிராய, பெருமாள் திருவருள். V. மணிவண்ணன் அவர்களின் அனுபவமிக்க சமையல் கலை.'
-              : 'Decades of authentic culinary expertise bringing the highest purity, traditional recipes, and warm hospitality to every home.'}
+              ? 'தலைமை: நிறுவனர் V. மணிவண்ணன் & இணை நிறுவனர் தீபா அவர்களின் அனுபவமிக்க சமையல் கலை.'
+              : 'Led by Founder V. Manivannan and Co-Founder Deepa, bringing decades of authentic culinary expertise, pure cow ghee, and warm hospitality to every home.'}
           </p>
         </div>
       </div>

@@ -29,7 +29,7 @@ export default function Hero({ lang }) {
               <span className="font-tamil font-extrabold">{BRAND_INFO.tamilName}</span>
               <span className="text-crimson-300">|</span>
               <span className="text-stone-800 flex items-center gap-1 font-semibold">
-                <Award className="w-3.5 h-3.5 text-crimson-700" /> By {BRAND_INFO.proprietor}
+                <Award className="w-3.5 h-3.5 text-crimson-700" /> By Founder {BRAND_INFO.founder} & Co-Founder {BRAND_INFO.coFounder}
               </span>
             </div>
 
@@ -135,7 +135,7 @@ export default function Hero({ lang }) {
                   />
                   <div>
                     <h2 className="font-serif font-bold text-stone-950 text-base">Harinee Signature Feast</h2>
-                    <p className="text-[11px] text-stone-500 font-medium">Curated by Chef V. Manivannan</p>
+                    <p className="text-[11px] text-stone-500 font-medium">Curated by Founder V. Manivannan & Co-Founder Deepa</p>
                   </div>
                 </div>
                 <span className="text-xs font-bold text-white bg-crimson-800 px-3 py-1 rounded-full shadow-xs">

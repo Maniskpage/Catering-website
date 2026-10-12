@@ -4,14 +4,20 @@ export const BRAND_INFO = {
   name: "Harinee Catering",
   tamilName: "ஹரிணி கேட்டரிங் சர்வீஸ்",
   tagline: "Feel The Taste",
-  proprietor: "V. Manivannan",
-  proprietorTamil: "V. மணிவண்ணன்",
+  founder: "V. Manivannan",
+  founderTamil: "V. மணிவண்ணன்",
+  coFounder: "Deepa",
+  coFounderTamil: "தீபா",
+  leadership: "V. Manivannan (Founder) & Deepa (Co-Founder)",
+  leadershipTamil: "V. மணிவண்ணன் (நிறுவனர்) & தீபா (இணை நிறுவனர்)",
+  proprietor: "V. Manivannan (Founder) & Deepa (Co-Founder)",
+  proprietorTamil: "V. மணிவண்ணன் & தீபா",
   minGuests: 100,
   minGuestsTamil: "மினிமம் - 100 நபர்",
   primaryPhone: "9698297590",
   formattedPhone: "+91 96982 97590",
-  secondaryPhone: "9842444425",
-  formattedSecondaryPhone: "+91 98424 44425",
+  secondaryPhone: "7904096754",
+  formattedSecondaryPhone: "+91 79040 96754",
   additionalPhone: "9443285317",
   formattedAdditionalPhone: "+91 94432 85317",
   email: "harineecatering@gmail.com",
@@ -29,6 +35,264 @@ export const BRAND_INFO = {
     }
   ]
 };
+
+export const CUSTOM_OPTIONS = {
+  diningStyles: [
+    { id: 'leaf', name: 'Traditional Banana Leaf', tamilName: 'வாழை இலை பந்தி உபசரிப்பு', icon: '🍃' },
+    { id: 'buffet', name: 'Premium Standing Live Buffet', tamilName: 'நவீன பஃபே முறை', icon: '🍽️' },
+    { id: 'vip', name: 'Special VIP Table Dedicated Serving', tamilName: 'வி.ஐ.பி பிரத்யேக உபசரிப்பு', icon: '⭐' }
+  ],
+  waterAndBeverages: [
+    { id: 'packaged-water', name: '300ml Sealed Bottled Water (Included Free)', tamilName: 'பாட்டிலில் அடைக்கப்பட்ட குடிநீர்', icon: '💧' },
+    { id: 'welcome-drink', name: 'Welcome Drink (Rose Milk / Nannari Sarbath / Mint Cooler)', tamilName: 'வரவேற்பு பானம்', icon: '🍹' },
+    { id: 'elaneer', name: 'Fresh Natural Tender Coconut Counter', tamilName: 'இயற்கை இளநீர்', icon: '🥥' }
+  ],
+  customAddons: [
+    { id: 'elaneer-payasam', name: 'Elaneer Payasam', tamilName: 'இளநீர் பாயாசம்', price: 30 },
+    { id: 'tirunelveli-halwa', name: 'Tirunelveli Ghee Halwa', tamilName: 'திருநெல்வேலி நெய் அல்வா', price: 35 },
+    { id: 'badam-milk', name: 'Kesar Badam Milk Counter', tamilName: 'குங்குமப்பூ பாதாம் பால்', price: 25 },
+    { id: 'paneer-special', name: 'Paneer Butter Masala Special', tamilName: 'பன்னீர் பட்டர் மசாலா ஸ்பெஷல்', price: 40 },
+    { id: 'mocktail', name: 'Welcome Mocktail Counter', tamilName: 'வரவேற்பு மாக்டெயில் கவுண்டர்', price: 25 },
+    { id: 'rose-milk', name: 'Fresh Rose Milk / Nannari Sharbat', tamilName: 'ரோஸ் மில்க் / நன்னாரி சர்பத்', price: 20 }
+  ],
+  delicacies: [
+    { id: 'elaneer-payasam', name: 'Elaneer Payasam', tamilName: 'இளநீர் பாயாசம்', price: 30 },
+    { id: 'tirunelveli-halwa', name: 'Tirunelveli Ghee Halwa', tamilName: 'திருநெல்வேலி நெய் அல்வா', price: 35 },
+    { id: 'badam-milk', name: 'Kesar Badam Milk Counter', tamilName: 'குங்குமப்பூ பாதாம் பால்', price: 25 },
+    { id: 'paneer-special', name: 'Paneer Butter Masala Special', tamilName: 'பன்னீர் பட்டர் மசாலா ஸ்பெஷல்', price: 40 },
+    { id: 'mocktail', name: 'Welcome Mocktail Counter', tamilName: 'வரவேற்பு மாக்டெயில் கவுண்டர்', price: 25 },
+    { id: 'rose-milk', name: 'Fresh Rose Milk / Nannari Sharbat', tamilName: 'ரோஸ் மில்க் / நன்னாரி சர்பத்', price: 20 }
+  ]
+};
+
+export const CUSTOM_MENU_CATALOG = {
+  breakfast: {
+    title: "Morning Tiffin (காலை டிபன்)",
+    icon: "☀️",
+    sections: [
+      {
+        name: "Traditional Sweets (இனிப்பு வகைகள்)",
+        items: [
+          { id: "b_kesari", name: "Rava Kesari", tamil: "ரவா கேசரி" },
+          { id: "b_pinekesari", name: "Pineapple Kesari", tamil: "அன்னாசி கேசரி" },
+          { id: "b_asoka", name: "Thiruvaiyaru Asoka Halwa", tamil: "அசோகா அல்வா" },
+          { id: "b_halwa", name: "Tirunelveli Ghee Wheat Halwa", tamil: "திருநெல்வேலி நெய் அல்வா" },
+          { id: "b_jamun", name: "Gulab Jamun", tamil: "குலாப் ஜாமுன்" },
+          { id: "b_mysore", name: "Pure Ghee Mysore Pak", tamil: "நெய் மைசூர் பாக்" },
+          { id: "b_peda", name: "Mathura Paal Peda", tamil: "பால் பேடா" }
+        ]
+      },
+      {
+        name: "Main Tiffin Specialties (முதன்மை டிபன்)",
+        items: [
+          { id: "b_idli", name: "Steaming Mallipoo Idli", tamil: "மல்லிப்பூ இட்லி" },
+          { id: "b_vada", name: "Crispy Medu Vada", tamil: "மெது வடை" },
+          { id: "b_masalvada", name: "Pattani Masala Vadai", tamil: "மசால் வடை" },
+          { id: "b_pongal", name: "Ghee Cashew Pongal", tamil: "நெய் பொங்கல்" },
+          { id: "b_poori", name: "Poori with Potato Masala", tamil: "பூரி & உருளை மசால்" },
+          { id: "b_kichadi", name: "Vegetable Rava Kichadi", tamil: "ரவா கிச்சடி" },
+          { id: "b_upma", name: "Semiya Vegetable Upma", tamil: "சேமியா உப்புமா" },
+          { id: "b_idiyappam", name: "Idiyappam with Coconut Milk", tamil: "இடியாப்பம் தேங்காய்ப் பால்" }
+        ]
+      },
+      {
+        name: "Live Hot Dosa Counter (லைவ் தோசை கவுண்டர்)",
+        items: [
+          { id: "b_roast", name: "Crispy Ghee Paper Roast", tamil: "நெய் ரோஸ்ட்" },
+          { id: "b_kaldosa", name: "Soft Kal Dosa", tamil: "கல் தோசை" },
+          { id: "b_uthappam", name: "Onion Uthappam", tamil: "வெங்காய ஊத்தப்பம்" },
+          { id: "b_podidosa", name: "Ghee Podi Dosa", tamil: "நெய் பொடி தோசை" },
+          { id: "b_mushdosa", name: "Mushroom Masala Dosa", tamil: "காளான் தோசை" },
+          { id: "b_paneerdosa", name: "Paneer Butter Dosa", tamil: "பன்னீர் தோசை" },
+          { id: "b_ravadosa", name: "Onion Rava Dosa", tamil: "ரவா தோசை" }
+        ]
+      },
+      {
+        name: "Chutneys & Gravies (சாம்பார் & சட்னி)",
+        items: [
+          { id: "b_coconutchut", name: "Fresh Coconut Chutney", tamil: "தேங்காய் சட்னி" },
+          { id: "b_tomchut", name: "Spicy Tomato Kara Chutney", tamil: "தக்காளி காரச் சட்னி" },
+          { id: "b_pudinachut", name: "Pudina Coriander Chutney", tamil: "புதினா கொத்தமல்லி சட்னி" },
+          { id: "b_sambar", name: "Kadamba Tiffin Sambar", tamil: "கதம்ப சாம்பார்" },
+          { id: "b_idlipodi", name: "Gunpowder Idli Podi with Pure Ghee", tamil: "இட்லி பொடி & நெய்" }
+        ]
+      },
+      {
+        name: "Hot Beverages (சுடச்சுட பானங்கள்)",
+        items: [
+          { id: "b_coffee", name: "Kumbakonam Degree Filter Coffee", tamil: "கும்பகோணம் டிகிரி காபி" },
+          { id: "b_tea", name: "Cardamom Masala Tea", tamil: "ஏலக்காய் மசாலா டீ" },
+          { id: "b_badam", name: "Hot Saffron Badam Milk", tamil: "குங்குமப்பூ பாதாம் பால்" }
+        ]
+      }
+    ]
+  },
+  lunch: {
+    title: "Grand Lunch Saapadu (மதிய கல்யாண சாப்பாடு)",
+    icon: "🍛",
+    sections: [
+      {
+        name: "Payasam & Sweets (பாயாசம் & இனிப்பு)",
+        items: [
+          { id: "l_elaneer", name: "Special Elaneer Payasam", tamil: "இளநீர் பாயாசம்" },
+          { id: "l_paruppu", name: "Traditional Paruppu Payasam", tamil: "பருப்பு பாயாசம்" },
+          { id: "l_semiyapay", name: "Semiya Sago Payasam", tamil: "சேமியா பாயாசம்" },
+          { id: "l_kheer", name: "Carrot Badam Kheer", tamil: "கேரட் பாதாம் கீர்" },
+          { id: "l_halwa", name: "Hot Ghee Wheat Halwa", tamil: "கோதுமை அல்வா" },
+          { id: "l_jangri", name: "Fresh Urud Dal Jangri", tamil: "ஜாங்கிரி" },
+          { id: "l_laddu", name: "Tirupati Ghee Boondi Laddu", tamil: "பூந்தி லட்டு" }
+        ]
+      },
+      {
+        name: "Welcome Drinks & Crispies (வரவேற்பு & மொறுமொறு)",
+        items: [
+          { id: "l_mocktail", name: "Welcome Fruit Punch Mocktail", tamil: "வெல்கம் மாாக்டெயில்" },
+          { id: "l_rosemilk", name: "Cold Rose Milk with Basil Seeds", tamil: "சப்ஜா ரோஸ் மில்க்" },
+          { id: "l_meduvada", name: "Crispy Kalyana Medu Vadai", tamil: "உளுந்து வடை" },
+          { id: "l_masalvada", name: "Crispy Masala Vadai", tamil: "மசால் வடை" },
+          { id: "l_cutlet", name: "Crispy Vegetable Cutlet", tamil: "வெஜிடபிள் கட்லெட்" },
+          { id: "l_babycorn", name: "Crispy Baby Corn Fry", tamil: "பேபி கார்ன் ப்ரை" }
+        ]
+      },
+      {
+        name: "Rice Varieties & Briyani (சாத வகைகள் & பிரியாணி)",
+        items: [
+          { id: "l_whiterice", name: "Thalavazhai Steamed Ponni Rice", tamil: "தலவாழை சோறு" },
+          { id: "l_briyani", name: "Dum Vegetable Briyani with Raitha", tamil: "வெஜ் தம் பிரியாணி" },
+          { id: "l_sambarrice", name: "Kalyana Bisibelebath / Sambar Sadham", tamil: "சாம்பார் சாதம்" },
+          { id: "l_lemonrice", name: "Tangy Lemon Rice", tamil: "எலுமிச்சை சாதம்" },
+          { id: "l_puliyodharai", name: "Kovil Style Puliyodharai", tamil: "புளியோதரை" },
+          { id: "l_curdrice", name: "Thick Creamy Curd Rice with Pomegranate", tamil: "மாதுளை தயிர் சாதம்" }
+        ]
+      },
+      {
+        name: "Kuzhambu & Rasam (குழம்பு & ரசம்)",
+        items: [
+          { id: "l_murungasambar", name: "Kalyana Murungakkai Sambar", tamil: "முருங்கைக்காய் சாம்பார்" },
+          { id: "l_ennaikathiri", name: "Ennai Kathirikai Kuzhambu", tamil: "எண்ணெய் கத்திரிக்காய் குழம்பு" },
+          { id: "l_vathakuzhambu", name: "Poondu Sundakkai Vatha Kuzhambu", tamil: "பூண்டு வத்தக் குழம்பு" },
+          { id: "l_morkuzhambu", name: "Vendaikkai Mor Kuzhambu", tamil: "மோர் குழம்பு" },
+          { id: "l_tomatrasam", name: "Kalyana Tomato Garlic Rasam", tamil: "தக்காளி பூண்டு ரசம்" },
+          { id: "l_mysorerasam", name: "Mysore Pepper Rasam", tamil: "மிளகு ரசம்" }
+        ]
+      },
+      {
+        name: "Poriyal, Varuval & Kootu (பொரியல் & வறுவல்)",
+        items: [
+          { id: "l_potatofry", name: "Urulaikizhangu Kara Varuval", tamil: "உருளைக்கிழங்கு கார வறுவல்" },
+          { id: "l_beansusili", name: "Beans Paruppu Usili", tamil: "பீன்ஸ் பருப்பு உசிலி" },
+          { id: "l_aviyal", name: "Traditional Kerala Aviyal", tamil: "பாரம்பரிய அவியல்" },
+          { id: "l_cabbage", name: "Cabbage Carrot Coconut Poriyal", tamil: "முட்டைக்கோஸ் பொரியல்" },
+          { id: "l_vazhaikkai", name: "Vazhaikkai Meen Varuval style", tamil: "வாழைக்காய் வறுவல்" },
+          { id: "l_kootu", name: "Chow-Chow Kadamba Kootu", tamil: "சௌ-சௌ கூட்டு" }
+        ]
+      },
+      {
+        name: "Sides & Desserts (தொடுகறி & இனிப்பு முடிவு)",
+        items: [
+          { id: "l_appalam", name: "Big Madras Crispy Appalam", tamil: "பெரிய அப்பளம்" },
+          { id: "l_pickle", name: "Mango Thokku / Narthangai Pickle", tamil: "மாங்காய் தொக்கு / ஊறுகாய்" },
+          { id: "l_mormilagai", name: "Crispy Mor Milagai", tamil: "மோர் மிளகாய்" },
+          { id: "l_ghee", name: "Pure Cow Ghee Pot", tamil: "சுத்தமான பசு நெய்" },
+          { id: "l_icecream", name: "Vanilla / Strawberry Ice Cream Cup", tamil: "ஐஸ்கிரீம்" },
+          { id: "l_fruitsalad", name: "Honey Cut Fruit Salad", tamil: "பழ சாலட்" },
+          { id: "l_beeda", name: "Calcutta Sweet Pan Beeda", tamil: "ஸ்வீட் பீடா" }
+        ]
+      }
+    ]
+  },
+  snacks: {
+    title: "Evening High-Tea & Snacks (மாலை ஸ்நாக்ஸ்)",
+    icon: "☕",
+    sections: [
+      {
+        name: "Hot Crispy Savories (சுடச்சுட கார வகைகள்)",
+        items: [
+          { id: "s_pakoda", name: "Crispy Onion Pakoda", tamil: "வெங்காய பக்கோடா" },
+          { id: "s_samosa", name: "Cocktail Mini Veg Samosa", tamil: "வெஜ் சமோசா" },
+          { id: "s_meduvada", name: "Hot Medu Vadai with Chutney", tamil: "மெது வடை" },
+          { id: "s_keeraivada", name: "Chettinad Keerai Vadai", tamil: "கீரை வடை" },
+          { id: "s_bonda", name: "Urulai Masala Bonda", tamil: "உருளை போண்டா" },
+          { id: "s_sundal", name: "Thengai Manga Pattani Sundal", tamil: "பட்டாணி சுண்டல்" }
+        ]
+      },
+      {
+        name: "Evening Sweets (மாலை இனிப்புகள்)",
+        items: [
+          { id: "s_jangri", name: "Mini Crispy Jangri", tamil: "மினி ஜாங்கிரி" },
+          { id: "s_halwa", name: "Hot Wheat Halwa", tamil: "கோதுமை அல்வா" },
+          { id: "s_mysorepak", name: "Ghee Mysore Pak", tamil: "நெய் மைசூர் பாக்" },
+          { id: "s_jamun", name: "Warm Gulab Jamun", tamil: "சூடான குலாப் ஜாமுன்" }
+        ]
+      },
+      {
+        name: "Beverages (சூடான & குளிர்ந்த பானங்கள்)",
+        items: [
+          { id: "s_coffee", name: "Traditional Filter Coffee", tamil: "பில்டர் காபி" },
+          { id: "s_tea", name: "Ginger Cardamom Tea", tamil: "இஞ்சி ஏலக்காய் டீ" },
+          { id: "s_sharbat", name: "Nannari Lemon Sharbat", tamil: "நன்னாரி சர்பத்" },
+          { id: "s_rosemilk", name: "Chilled Rose Milk", tamil: "குளிர்ந்த ரோஸ் மில்க்" }
+        ]
+      }
+    ]
+  },
+  dinner: {
+    title: "Dinner Tiffin & Live Buffet (இரவு டிபன் & பஃபே)",
+    icon: "🌙",
+    sections: [
+      {
+        name: "Breads & Main Tiffins (ரொட்டி & டிபன்)",
+        items: [
+          { id: "d_phulka", name: "Soft Phulka / Chapati with Veg Kurma", tamil: "சப்பாத்தி & குருமா" },
+          { id: "d_parotta", name: "Malabar Coin Parotta with Veg Salna", tamil: "பரோட்டா & சால்னா" },
+          { id: "d_poori", name: "Wheat Poori with Chana Masala", tamil: "பூரி & சன்னா மசால்" },
+          { id: "d_idiyappam", name: "Soft Idiyappam with Coconut Milk / Veg Stew", tamil: "இடியாப்பம் & பால்" },
+          { id: "d_miniidli", name: "Mini Podi Ghee Button Idli", tamil: "மினி பொடி இட்லி" }
+        ]
+      },
+      {
+        name: "Live Dosa Counter (லைவ் தோசை கவுண்டர்)",
+        items: [
+          { id: "d_ghee_roast", name: "Crispy Ghee Paper Roast", tamil: "நெய் ரோஸ்ட்" },
+          { id: "d_podi_roast", name: "Spicy Podi Roast", tamil: "பொடி ரோஸ்ட்" },
+          { id: "d_onion_uthappam", name: "Carrot Onion Uthappam", tamil: "ஊத்தப்பம்" },
+          { id: "d_paneer_roast", name: "Paneer Tikka Dosa", tamil: "பன்னீர் தோசை" },
+          { id: "d_mushroom_dosa", name: "Spicy Mushroom Dosa", tamil: "காளான் தோசை" }
+        ]
+      },
+      {
+        name: "Rice Varieties & Chinese Specials (சாதம் & ஸ்பெஷல்)",
+        items: [
+          { id: "d_friedrice", name: "Vegetable Fried Rice with Gobi Manchurian", tamil: "ப்ரைட் ரைஸ் & மஞ்சூரியன்" },
+          { id: "d_noodles", name: "Schezwan Veg Hakka Noodles", tamil: "வெஜ் நூடுல்ஸ்" },
+          { id: "d_jeerarice", name: "Jeera Ghee Rice with Dal Tadka", tamil: "சீரக சாதம் & பருப்பு" },
+          { id: "d_briyani", name: "Dum Veg Biryani with Raitha", tamil: "வெஜ் பிரியாணி" },
+          { id: "d_curdrice", name: "Creamy Curd Rice with Pomegranate", tamil: "தயிர் சாதம்" }
+        ]
+      },
+      {
+        name: "Gravies & Accompaniments (குழம்பு வகைகள்)",
+        items: [
+          { id: "d_paneergravy", name: "Paneer Butter Masala", tamil: "பன்னீர் பட்டர் மசாலா" },
+          { id: "d_vegkurma", name: "Hotel Style Vegetable Kurma", tamil: "வெஜிடபிள் குருமா" },
+          { id: "d_mushgravy", name: "Mushroom Masala Gravy", tamil: "காளான் மசாலா" },
+          { id: "d_sambar", name: "Kadamba Tiffin Sambar", tamil: "சாம்பார்" },
+          { id: "d_chutneys", name: "Coconut & Kara Chutneys", tamil: "தேங்காய் & காரச் சட்னி" }
+        ]
+      },
+      {
+        name: "Desserts (இனிப்பு முடிவுகள்)",
+        items: [
+          { id: "d_icecream", name: "Artisanal Ice Cream with Nuts", tamil: "ஐஸ்கிரீம்" },
+          { id: "d_jamun", name: "Warm Gulab Jamun", tamil: "குலாப் ஜாமுன்" },
+          { id: "d_cutfruits", name: "Fresh Cut Tropical Fruits", tamil: "பழத் தட்டு" },
+          { id: "d_beeda", name: "Royal Sweet Beeda", tamil: "ஸ்வீட் பீடா" }
+        ]
+      }
+    ]
+  }
+};
+
 
 export const PARTNER_HALLS = [
   {
@@ -596,7 +860,7 @@ export const TESTIMONIALS = [
     event: "Seemantham Function (300 Guests)",
     venue: "Ravi Mini Hall A/C, Trichy",
     rating: 5,
-    text: "We ordered the 7 Variety Rice Valaikappu package along with the Chocolate Fountain and Live Panju Mittai for kids. Every guest praised the authentic home-style taste and Manivannan sir's personal hospitality.",
+    text: "We ordered the 7 Variety Rice Valaikappu package along with the Chocolate Fountain and Live Panju Mittai for kids. Every guest praised the authentic home-style taste and Founder Manivannan sir & Co-Founder Deepa madam's personal hospitality.",
     date: "January 2026"
   },
   {
@@ -641,3 +905,4 @@ export const GALLERY_IMAGES = [
     category: "Live Counters"
   }
 ];
+

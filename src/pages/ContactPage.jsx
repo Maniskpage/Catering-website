@@ -8,9 +8,9 @@ export default function ContactPage({ lang }) {
   return (
     <div className="pt-24 pb-16 bg-white min-h-screen">
       <SEOHead
-        title="Contact & Book Catering in Trichy | Harinee Catering - Chef V. Manivannan"
-        description="Contact Harinee Catering Trichy for wedding & event booking. Call +91 96982 97590 or 98424 44425. City Office: No. 23, Ravi Mini Hall, Karur Bypass Road, Trichy - 2."
-        keywords="contact harinee catering, catering booking phone number trichy, book wedding catering trichy, ravi mini hall contact number, manivannan caterer trichy phone"
+        title="Contact & Book Catering in Trichy | Harinee Catering - Founder V. Manivannan & Co-Founder Deepa"
+        description="Contact Harinee Catering Trichy for wedding & event booking. Call +91 96982 97590 or 79040 96754. Founded by V. Manivannan & Deepa. City Office: No. 23, Ravi Mini Hall, Karur Bypass Road, Trichy - 2."
+        keywords="contact harinee catering, catering booking phone number trichy, book wedding catering trichy, ravi mini hall contact number, manivannan deepa caterer trichy phone"
       />
 
       {/* Page Header */}
