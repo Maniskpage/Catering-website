@@ -256,6 +256,9 @@ _Please confirm date availability and guide us for booking._`;
     setIsGeneratingPdf(true);
     confetti({ particleCount: 50, spread: 50, origin: { y: 0.7 } });
 
+    // Allow React state update to mount the template & loading backdrop
+    await new Promise(resolve => setTimeout(resolve, 150));
+
     try {
       const element = document.getElementById('cost-calc-pdf-template');
       if (!element) {
@@ -273,7 +276,7 @@ _Please confirm date availability and guide us for booking._`;
           logging: false,
           scrollX: 0,
           scrollY: 0,
-          windowWidth: 800
+          windowWidth: 760
         },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
@@ -836,10 +839,25 @@ _Please confirm date availability and guide us for booking._`;
         </div>
       )}
 
-      {/* Hidden PDF Printable Template (rendered for html2pdf direct download with zero clipping) */}
-      <div style={{ position: 'absolute', left: 0, top: 0, width: '740px', zIndex: -9999, pointerEvents: 'none', background: '#ffffff' }}>
-        <div id="cost-calc-pdf-template" dangerouslySetInnerHTML={{ __html: generateQuotationHTML() }} />
-      </div>
+      {/* High-Resolution PDF Rendering Container (Mounted ONLY during generation so it never leaks or affects mobile layout) */}
+      {isGeneratingPdf && (
+        <div 
+          className="fixed inset-0 z-[99999] bg-black/75 backdrop-blur-sm flex flex-col items-center justify-center text-white"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="bg-white text-stone-900 rounded-2xl p-6 shadow-2xl flex flex-col items-center gap-3 border border-peach-200">
+            <RefreshCw className="w-9 h-9 animate-spin text-crimson-700" />
+            <h4 className="font-serif font-bold text-base text-crimson-950">Preparing Official Quotation PDF...</h4>
+            <p className="text-xs text-stone-500">Creating high-resolution print copy • Harinee Catering</p>
+          </div>
+
+          {/* Rendered at fixed coordinates for html2canvas to capture cleanly */}
+          <div style={{ position: 'fixed', left: 0, top: 0, width: '740px', zIndex: -10, pointerEvents: 'none', background: '#ffffff' }}>
+            <div id="cost-calc-pdf-template" dangerouslySetInnerHTML={{ __html: generateQuotationHTML() }} />
+          </div>
+        </div>
+      )}
     </>
   );
 }

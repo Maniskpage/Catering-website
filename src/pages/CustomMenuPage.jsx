@@ -135,10 +135,13 @@ export default function CustomMenuPage({ lang }) {
     setIsGeneratingPdf(true);
     confetti({ particleCount: 50, spread: 50, origin: { y: 0.7 } });
 
+    // Allow React state update to mount the template & loading backdrop
+    await new Promise(resolve => setTimeout(resolve, 150));
+
     try {
       const element = document.getElementById('custom-menu-pdf-template');
       if (!element) {
-        alert('Template not found');
+        alert('Template not ready, please try again.');
         setIsGeneratingPdf(false);
         return;
       }
@@ -153,7 +156,7 @@ export default function CustomMenuPage({ lang }) {
           logging: false,
           scrollX: 0,
           scrollY: 0,
-          windowWidth: 800
+          windowWidth: 760
         },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
@@ -546,119 +549,134 @@ export default function CustomMenuPage({ lang }) {
 
       </div>
 
-      {/* Hidden PDF Printable Template (rendered for html2pdf direct download with zero clipping) */}
-      <div style={{ position: 'absolute', left: 0, top: 0, width: '740px', zIndex: -9999, pointerEvents: 'none', background: '#ffffff' }}>
-        <div id="custom-menu-pdf-template" ref={printContentRef} style={{
-          width: '740px',
-          boxSizing: 'border-box',
-          padding: '20px 24px',
-          backgroundColor: '#ffffff',
-          color: '#1a1a1a',
-          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Mukta Malar", Arial, sans-serif',
-          fontSize: '11px',
-          lineHeight: '1.5'
-        }}>
-          {/* Header */}
-          <div style={{ borderBottom: '2.5px solid #8A101C', paddingBottom: '10px', marginBottom: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div>
-              <div style={{ fontSize: '23px', fontWeight: '900', color: '#8A101C', letterSpacing: '-0.5px' }}>
-                HARINEE CATERING
-              </div>
-              <div style={{ fontSize: '10px', fontWeight: '700', color: '#CA8A04', letterSpacing: '1px', textTransform: 'uppercase' }}>
-                FEEL THE TASTE • 100% PURE VEGETARIAN
-              </div>
-              <div style={{ fontSize: '10px', color: '#374151', fontWeight: '600', marginTop: '2px' }}>
-                Founder: V. Manivannan • Co-Founder: Deepa • Trichy
-              </div>
-            </div>
-            <div style={{ textAlign: 'right', fontSize: '10.5px', color: '#4b5563' }}>
-              <div style={{ fontWeight: '800', color: '#8A101C', fontSize: '13px' }}>CUSTOM MENU PROPOSAL</div>
-              <div>Date: {new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
-              <div>Support: 96982 97590 / 79040 96754</div>
-            </div>
+      {/* High-Resolution PDF Rendering Container (Mounted ONLY during generation so it never leaks or affects mobile layout) */}
+      {isGeneratingPdf && (
+        <div 
+          className="fixed inset-0 z-[99999] bg-black/75 backdrop-blur-sm flex flex-col items-center justify-center text-white"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="bg-white text-stone-900 rounded-2xl p-6 shadow-2xl flex flex-col items-center gap-3 border border-peach-200">
+            <RefreshCw className="w-9 h-9 animate-spin text-crimson-700" />
+            <h4 className="font-serif font-bold text-base text-crimson-950">Generating Official Custom Menu PDF...</h4>
+            <p className="text-xs text-stone-500">Preparing high-resolution print proposal • Harinee Catering</p>
           </div>
 
-          {/* Event Details Grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', padding: '10px 12px', backgroundColor: '#faf7f2', border: '1px solid #e5e7eb', borderRadius: '8px', marginBottom: '12px' }}>
-            <div><strong>Client Name:</strong> {clientName || 'Valued Customer'}</div>
-            <div><strong>Phone Number:</strong> {clientPhone || 'Not specified'}</div>
-            <div><strong>Event Type:</strong> {eventType}</div>
-            <div><strong>Muhurtham Date:</strong> {eventDate || 'To be scheduled'}</div>
-            <div><strong>Venue:</strong> {eventVenue}</div>
-            <div><strong>Guest Count:</strong> {guestCount} Guests (Min 100)</div>
-          </div>
-
-          {/* Selected Menus Table */}
-          <div style={{ marginBottom: '12px' }}>
-            <div style={{ fontSize: '12px', fontWeight: '800', color: '#8A101C', marginBottom: '6px', borderBottom: '1px solid #8A101C', paddingBottom: '3px' }}>
-              HANDPICKED CUSTOM DISHES LIST
-            </div>
-
-            {['breakfast', 'lunch', 'snacks', 'dinner'].map(mealKey => {
-              const sections = getSelectedItemsForMeal(mealKey);
-              if (sections.length === 0) return null;
-              return (
-                <div key={mealKey} style={{ marginBottom: '8px' }}>
-                  <div style={{ fontWeight: '800', color: '#111827', fontSize: '11px', backgroundColor: '#f3f4f6', padding: '4px 8px', borderRadius: '4px' }}>
-                    {CUSTOM_MENU_CATALOG[mealKey].icon} {CUSTOM_MENU_CATALOG[mealKey].title}
+          {/* Rendered at fixed coordinates for html2canvas to capture cleanly */}
+          <div style={{ position: 'fixed', left: 0, top: 0, width: '740px', zIndex: -10, pointerEvents: 'none', background: '#ffffff' }}>
+            <div id="custom-menu-pdf-template" ref={printContentRef} style={{
+              width: '740px',
+              boxSizing: 'border-box',
+              padding: '20px 24px',
+              backgroundColor: '#ffffff',
+              color: '#1a1a1a',
+              fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Mukta Malar", Arial, sans-serif',
+              fontSize: '11px',
+              lineHeight: '1.5'
+            }}>
+              {/* Header */}
+              <div style={{ borderBottom: '2.5px solid #8A101C', paddingBottom: '10px', marginBottom: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <div style={{ fontSize: '23px', fontWeight: '900', color: '#8A101C', letterSpacing: '-0.5px' }}>
+                    HARINEE CATERING
                   </div>
-                  <div style={{ padding: '4px 8px' }}>
-                    {sections.map(sec => (
-                      <div key={sec.sectionName} style={{ marginBottom: '4px', lineHeight: '1.6' }}>
-                        <span style={{ fontWeight: '700', color: '#8A101C' }}>• {sec.sectionName}: </span>
-                        <span style={{ color: '#27272a' }}>
-                          {sec.items.map(item => `${item.name} (${item.tamil})`).join(' • ')}
-                        </span>
+                  <div style={{ fontSize: '10px', fontWeight: '700', color: '#CA8A04', letterSpacing: '1px', textTransform: 'uppercase' }}>
+                    FEEL THE TASTE • 100% PURE VEGETARIAN
+                  </div>
+                  <div style={{ fontSize: '10px', color: '#374151', fontWeight: '600', marginTop: '2px' }}>
+                    Founder: V. Manivannan • Co-Founder: Deepa • Trichy
+                  </div>
+                </div>
+                <div style={{ textAlign: 'right', fontSize: '10.5px', color: '#4b5563' }}>
+                  <div style={{ fontWeight: '800', color: '#8A101C', fontSize: '13px' }}>CUSTOM MENU PROPOSAL</div>
+                  <div>Date: {new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
+                  <div>Support: 96982 97590 / 79040 96754</div>
+                </div>
+              </div>
+
+              {/* Event Details Grid */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', padding: '10px 12px', backgroundColor: '#faf7f2', border: '1px solid #e5e7eb', borderRadius: '8px', marginBottom: '12px' }}>
+                <div><strong>Client Name:</strong> {clientName || 'Valued Customer'}</div>
+                <div><strong>Phone Number:</strong> {clientPhone || 'Not specified'}</div>
+                <div><strong>Event Type:</strong> {eventType}</div>
+                <div><strong>Muhurtham Date:</strong> {eventDate || 'To be scheduled'}</div>
+                <div><strong>Venue:</strong> {eventVenue}</div>
+                <div><strong>Guest Count:</strong> {guestCount} Guests (Min 100)</div>
+              </div>
+
+              {/* Selected Menus Table */}
+              <div style={{ marginBottom: '12px' }}>
+                <div style={{ fontSize: '12px', fontWeight: '800', color: '#8A101C', marginBottom: '6px', borderBottom: '1px solid #8A101C', paddingBottom: '3px' }}>
+                  HANDPICKED CUSTOM DISHES LIST
+                </div>
+
+                {['breakfast', 'lunch', 'snacks', 'dinner'].map(mealKey => {
+                  const sections = getSelectedItemsForMeal(mealKey);
+                  if (sections.length === 0) return null;
+                  return (
+                    <div key={mealKey} style={{ marginBottom: '8px' }}>
+                      <div style={{ fontWeight: '800', color: '#111827', fontSize: '11px', backgroundColor: '#f3f4f6', padding: '4px 8px', borderRadius: '4px' }}>
+                        {CUSTOM_MENU_CATALOG[mealKey].icon} {CUSTOM_MENU_CATALOG[mealKey].title}
                       </div>
-                    ))}
+                      <div style={{ padding: '4px 8px' }}>
+                        {sections.map(sec => (
+                          <div key={sec.sectionName} style={{ marginBottom: '4px', lineHeight: '1.6' }}>
+                            <span style={{ fontWeight: '700', color: '#8A101C' }}>• {sec.sectionName}: </span>
+                            <span style={{ color: '#27272a' }}>
+                              {sec.items.map(item => `${item.name} (${item.tamil})`).join(' • ')}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+
+                {/* Selected Live Stalls */}
+                {selectedStalls.length > 0 && (
+                  <div style={{ marginTop: '8px' }}>
+                    <div style={{ fontWeight: '800', color: '#111827', fontSize: '11px', backgroundColor: '#fef3c7', padding: '4px 8px', borderRadius: '4px' }}>
+                      🎪 Live Stalls & Entertainment Add-ons ({selectedStalls.length})
+                    </div>
+                    <div style={{ padding: '5px 8px', color: '#374151', lineHeight: '1.6' }}>
+                      {selectedStalls.map(id => LIVE_STALLS.find(s => s.id === id)?.name).filter(Boolean).join(' • ')}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Custom Notes */}
+              {customNotes && (
+                <div style={{ backgroundColor: '#fffbeb', border: '1px solid #fde68a', padding: '6px 10px', borderRadius: '6px', marginBottom: '10px', fontSize: '10px' }}>
+                  <strong>Customer Special Requests / Notes:</strong> {customNotes}
+                </div>
+              )}
+
+              {/* Terms & Signatures */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', borderTop: '1px solid #e5e7eb', paddingTop: '10px', marginTop: '12px' }}>
+                <div style={{ fontSize: '9px', color: '#4b5563', maxWidth: '65%', lineHeight: '1.4' }}>
+                  <strong>Catering Standards:</strong><br />
+                  • 100% Pure Vegetarian prepared with cold-pressed groundnut/gingelly oil & pure cow ghee.<br />
+                  • 300ml sealed packaged drinking water included with every plate.<br />
+                  • Punctual on-site service with trained uniformed catering staff.<br />
+                  • Personal tasting consultation & final per-plate rate locked upon date confirmation.
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                  <div style={{ fontWeight: '800', fontSize: '11px', color: '#8A101C' }}>HARINEE CATERING</div>
+                  <div style={{ fontSize: '9.5px', color: '#4b5563', marginTop: '14px' }}>
+                    Authorized Signatures /<br />
+                    <strong>V. Manivannan (Founder) & Deepa (Co-Founder)</strong>
                   </div>
                 </div>
-              );
-            })}
-
-            {/* Selected Live Stalls */}
-            {selectedStalls.length > 0 && (
-              <div style={{ marginTop: '8px' }}>
-                <div style={{ fontWeight: '800', color: '#111827', fontSize: '11px', backgroundColor: '#fef3c7', padding: '4px 8px', borderRadius: '4px' }}>
-                  🎪 Live Stalls & Entertainment Add-ons ({selectedStalls.length})
-                </div>
-                <div style={{ padding: '5px 8px', color: '#374151', lineHeight: '1.6' }}>
-                  {selectedStalls.map(id => LIVE_STALLS.find(s => s.id === id)?.name).filter(Boolean).join(' • ')}
-                </div>
               </div>
-            )}
-          </div>
 
-          {/* Custom Notes */}
-          {customNotes && (
-            <div style={{ backgroundColor: '#fffbeb', border: '1px solid #fde68a', padding: '6px 10px', borderRadius: '6px', marginBottom: '10px', fontSize: '10px' }}>
-              <strong>Customer Special Requests / Notes:</strong> {customNotes}
-            </div>
-          )}
-
-          {/* Terms & Signatures */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', borderTop: '1px solid #e5e7eb', paddingTop: '10px', marginTop: '12px' }}>
-            <div style={{ fontSize: '9px', color: '#4b5563', maxWidth: '65%', lineHeight: '1.4' }}>
-              <strong>Catering Standards:</strong><br />
-              • 100% Pure Vegetarian prepared with cold-pressed groundnut/gingelly oil & pure cow ghee.<br />
-              • 300ml sealed packaged drinking water included with every plate.<br />
-              • Punctual on-site service with trained uniformed catering staff.<br />
-              • Personal tasting consultation & final per-plate rate locked upon date confirmation.
-            </div>
-            <div style={{ textAlign: 'right' }}>
-              <div style={{ fontWeight: '800', fontSize: '11px', color: '#8A101C' }}>HARINEE CATERING</div>
-              <div style={{ fontSize: '9.5px', color: '#4b5563', marginTop: '14px' }}>
-                Authorized Signatures /<br />
-                <strong>V. Manivannan (Founder) & Deepa (Co-Founder)</strong>
+              <div style={{ marginTop: '10px', borderTop: '1px solid #f3f4f6', paddingTop: '6px', textAlign: 'center', fontSize: '8.5px', color: '#6b7280' }}>
+                City Booking Office: No. 23, Ravi Mini Hall, Karur Bypass Road, Trichy - 620002 • Head Office: Peramangalam (A), Trichy • Contact: 96982 97590 / 79040 96754
               </div>
             </div>
-          </div>
-
-          <div style={{ marginTop: '10px', borderTop: '1px solid #f3f4f6', paddingTop: '6px', textAlign: 'center', fontSize: '8.5px', color: '#6b7280' }}>
-            City Booking Office: No. 23, Ravi Mini Hall, Karur Bypass Road, Trichy - 620002 • Head Office: Peramangalam (A), Trichy • Contact: 96982 97590 / 79040 96754
           </div>
         </div>
-      </div>
+      )}
 
     </div>
   );
